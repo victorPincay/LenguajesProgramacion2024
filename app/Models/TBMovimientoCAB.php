@@ -13,7 +13,6 @@ class TBMovimientoCAB extends Model
     protected $table = 'TBMovimientoCAB';
     protected $primaryKey = 'DocumentoID';
     protected $guarded = [];
-    public $incrementing = false;
     public $timestamps = false;
 
     public function detalles(): HasMany {

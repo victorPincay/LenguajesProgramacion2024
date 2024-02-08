@@ -20,8 +20,7 @@
         <script src="{{ asset('js/mantenimientos.js') }}" type="text/javascript"></script>
         <script type="text/javascript">
             function buscarMovimiento() {
-                const url = '{{url('/')}}';
-                window.location.href = url + '?id=' + document.getElementById('noCab').value;
+                window.location.href = '{{url('/')}}?id=' + document.getElementById('noCab').value;
             }
         </script>
     </head>
@@ -31,6 +30,9 @@
 
         <!-- Formulario articulo -->
         @include('articulo')
+
+        <!-- Busqueda movimiento -->
+        @include('busqueda')
 
         <!-- Formulario movimientos inventario -->
         <form method="POST" action="/movimiento" class="p-3">
@@ -42,8 +44,8 @@
                         <div class="col-5">
                             <label>No Documento</label>
                             <div class="input-group">
-                                <input class="form-control form-control-sm" type="text" id="noCab" name="noCab" required="required" value="{{ $movimiento->DocumentoID }}" />
-                                <button class="btn btn-outline-secondary" type="button" onclick="buscarMovimiento()">Buscar</button>
+                                <input class="form-control form-control-sm" type="text" value="{{ $id ?? $movimiento->DocumentoID }}" disabled="disabled" />
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modal-busqueda">Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -137,7 +139,11 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-8">
+                @if (isset($id))
                     <button type="submit" class="btn btn-primary">Crear</button>
+                @else
+                    <a href="{{url('/')}}" role="button" class="btn btn-danger">Cancelar b&uacute;squeda</a>
+                @endif
                 </div>
             </div>
         </form>

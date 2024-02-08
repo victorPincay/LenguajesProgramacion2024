@@ -11,12 +11,14 @@ class MovimientoController extends Controller
 {
     public function Index(Request $request) {
         $movimiento = TBMovimientoCAB::with('detalles')->firstOrNew(['DocumentoID' => $request->id]);
-        return view('welcome', ['movimiento' => $movimiento]);
+        if (isset($request->id)) {
+            return view('welcome', ['movimiento' => $movimiento]);
+        }
+        return view('welcome', ['id' => TBMovimientoCAB::count() + 1, 'movimiento' => $movimiento]);
     }
 
     public function Guardar(Request $request): RedirectResponse {
         $movimiento = new TBMovimientoCAB;
-        $movimiento->DocumentoID = $request->noCab;
         $movimiento->Fecha = now();
         $movimiento->Tipo = $request->tipoCab;
         $movimiento->Almacen = $request->almacenCab;
