@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'App\Http\Controllers\MovimientoController@Index');
+Route::post('/movimiento', 'App\Http\Controllers\MovimientoController@Guardar');
