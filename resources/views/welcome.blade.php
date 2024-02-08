@@ -18,7 +18,7 @@
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script src="{{ asset('js/mantenimientos.js') }}" type="text/javascript"></script>
-        <script>
+        <script type="text/javascript">
             function buscarMovimiento() {
                 const url = '{{url('/')}}';
                 window.location.href = url + '?id=' + document.getElementById('noCab').value;
@@ -26,91 +26,13 @@
         </script>
     </head>
     <body>
+        <!-- Formulario almacen -->
+        @include('almacen')
 
-    @include('almacen')
-    @include('articulo')
+        <!-- Formulario articulo -->
+        @include('articulo')
 
-    <form>
-        <h4 class="text-center">Movimiento inventario</h4>
-        <div class="row mb-5 justify-content-center">
-            <div class="col-8">
-                <div class="row mb-1">
-                    <div class="col-5">
-                        <label>No Documento</label>
-                        <div class="input-group">
-                            <input class="form-control form-control-sm" type="text" id="noCab" name="noCab" required="required" />
-                            <button class="btn btn-outline-secondary" type="button">Buscar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-1">
-                    <div class="col-5">
-                            <label>Tipo</label>
-                            <select class="form-select form-select-sm" id="tipoCab" name="tipoCab" required="required">
-                                <option value="">Seleccione una opci&oacute;n</option>
-                                <option value="1">Entrada de inventario</option>
-                                <option value="2">Salida de inventario</option>
-                            </select>
-                        </div>
-                    </div>
-                <div class="row mb-1">
-                    <div class="col-5">
-                        <label>Almac&eacute;n</label>
-                        <div class="input-group">
-                            <select class="form-select form-select-sm" id="almacenCab" name="almacenCab" onchange="changeAlmacen(this)" required="required">
-                                <option value="">Seleccione una opci&oacute;n</option>
-                                @foreach (TBAlmacenes::all() as $almacen)
-                                    <option value="{{ $almacen->AlmacenID }}">{{ $almacen->Descripcion }}</option>
-                                @endforeach
-                                </select>
-                                <button class="btn btn-outline-primary" 
-                                    type="button"
-                                    onclick="limpiarAlmacen()"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal-almacen">
-                                    Nuevo
-                                </button>
-                                <button class="btn btn-outline-success" 
-                                    type="button"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal-almacen">
-                                    Editar
-                                </button>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                <a href="javascript:void(0)" 
-                                    onclick="editarArticulo('', '')" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modal-articulo">
-                                    Nuevo art&iacute;culo
-                                </a>
-                            </th>
-                            <th>Codigo</th>
-                            <th>Descripci&oacute;n</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-8">
-                <button type="submit" class="btn btn-primary">Crear</button>
-            </div>
-        </div>
-    </form>
+        <!-- Formulario movimientos inventario -->
         <form method="POST" action="/movimiento" class="p-3">
             @csrf
             <h4 class="text-center">Movimiento inventario</h4>
@@ -139,15 +61,23 @@
                         <div class="col-5">
                             <label>Almac&eacute;n</label>
                             <div class="input-group">
-                                <select class="form-select form-select-sm" id="almacenCab" name="almacenCab" required="required">
+                                <select class="form-select form-select-sm" id="almacenCab" name="almacenCab" onchange="changeAlmacen(this)" required="required">
                                     <option value="">Seleccione una opci&oacute;n</option>
+                                @foreach (TBAlmacenes::all() as $almacen)
+                                    <option value="{{ $almacen->AlmacenID }}" {{ $movimiento->Almacen == $almacen->AlmacenID ? 'selected' : '' }}>{{ $almacen->Descripcion }}</option>
+                                @endforeach
                                 </select>
                                 <button class="btn btn-outline-primary" 
-                                    type="button">
+                                    type="button"
+                                    onclick="limpiarAlmacen()"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal-almacen">
                                     Nuevo
                                 </button>
                                 <button class="btn btn-outline-success" 
-                                    type="button">
+                                    type="button"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal-almacen">
                                     Editar
                                 </button>
                             </div>
@@ -161,7 +91,10 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <a href="javascript:void(0)">
+                                    <a href="javascript:void(0)" 
+                                        onclick="editarArticulo('', '')" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modal-articulo">
                                         Nuevo art&iacute;culo
                                     </a>
                                 </th>
@@ -174,7 +107,10 @@
                         @foreach (TBArticulos::all() as $index=>$articulo)
                             <tr>
                                 <td>
-                                    <a href="javascript:void(0)">
+                                    <a href="javascript:void(0)" 
+                                        onclick="editarArticulo('{{ $articulo->ArticuloID }}', '{{ $articulo->Descripcion }}')" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modal-articulo">
                                         Editar
                                     </a>
                                 </td>
@@ -183,14 +119,15 @@
                                 <td>
                                     <input type="hidden" name="articulos[{{$index}}][Id]" value="{{$articulo->ArticuloID}}" />
                                     <input class="form-control form-control-sm" type="number" name="articulos[{{$index}}][Cantidad]" required="required" 
-                                        value="<?php
-                                        foreach ($movimiento->detalles as $value) {
-                                            if ($value->ArticuloID == $articulo->ArticuloID) {
-                                                echo $value->Cantidad;
-                                                break;
-                                            }
-                                        } 
-                                        ?>" />
+                                        value=
+                                            "@php
+                                            foreach ($movimiento->detalles as $value) {
+                                                if ($value->ArticuloID == $articulo->ArticuloID) {
+                                                    echo $value->Cantidad;
+                                                    break;
+                                                }
+                                            } 
+                                            @endphp" />
                                 </td>
                             </tr>
                         @endforeach
