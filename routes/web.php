@@ -14,4 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', 'App\Http\Controllers\MovimientoController@Index');
+Route::post('/almacen', 'App\Http\Controllers\AlmacenController@Guardar');
+Route::post('/articulo', 'App\Http\Controllers\ArticuloController@Guardar');
 Route::post('/movimiento', 'App\Http\Controllers\MovimientoController@Guardar');
