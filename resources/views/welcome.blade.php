@@ -1,3 +1,5 @@
+@use('App\Models\TBAlmacenes')
+@use('App\Models\TBArticulos')
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -15,8 +17,13 @@
 
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="{{ asset('js/mantenimientos.js') }}" type="text/javascript"></script>
     </head>
     <body>
+
+    @include('almacen')
+    @include('articulo')
+
     <form>
         <h4 class="text-center">Movimiento inventario</h4>
         <div class="row mb-5 justify-content-center">
@@ -44,8 +51,25 @@
                     <div class="col-5">
                         <label>Almac&eacute;n</label>
                         <div class="input-group">
-                            <select class="form-select form-select-sm" id="almacenCab" name="almacenCab" required="required">
+                            <select class="form-select form-select-sm" id="almacenCab" name="almacenCab" onchange="changeAlmacen(this)" required="required">
                                 <option value="">Seleccione una opci&oacute;n</option>
+                                @foreach (TBAlmacenes::all() as $almacen)
+                                    <option value="{{ $almacen->AlmacenID }}">{{ $almacen->Descripcion }}</option>
+                                @endforeach
+                                </select>
+                                <button class="btn btn-outline-primary" 
+                                    type="button"
+                                    onclick="limpiarAlmacen()"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal-almacen">
+                                    Nuevo
+                                </button>
+                                <button class="btn btn-outline-success" 
+                                    type="button"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal-almacen">
+                                    Editar
+                                </button>
                             </select>
                         </div>
                     </div>
@@ -58,7 +82,10 @@
                     <thead>
                         <tr>
                             <th>
-                                <a href="javascript:void(0)">
+                                <a href="javascript:void(0)" 
+                                    onclick="editarArticulo('', '')" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modal-articulo">
                                     Nuevo art&iacute;culo
                                 </a>
                             </th>
